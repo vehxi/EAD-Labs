@@ -267,3 +267,58 @@ input:focus-visible {
         transition: none;
     }
 }
+
+/* Страница подробностей покупателя */
+
+.details-title {
+    margin: 28px 0 14px;
+
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 24px;
+    font-weight: 500;
+    line-height: 1.2;
+    letter-spacing: -0.012em;
+}
+
+.customer-details {
+    overflow-wrap: anywhere;
+}
+
+.customer-details p:first-child {
+    margin-top: 0;
+}
+
+.customer-details p:last-child {
+    margin-bottom: 0;
+}
+
+.details-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 24px;
+}
+
+select {
+    width: 100%;
+    min-height: 44px;
+    padding: 10px 12px;
+
+    border: 1px solid var(--line);
+    border-radius: var(--radius-small);
+
+    background: #fafafa;
+    color: var(--text);
+
+    font: inherit;
+}
+
+select:focus {
+    border-color: var(--dark);
+    box-shadow: 0 0 0 3px rgb(0 0 0 / 10%);
+}
+
+select:focus-visible {
+    outline: 2px solid var(--dark);
+    outline-offset: 3px;
+}

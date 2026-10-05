@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import ru.kafpin.lab2.entity.Customer;
 import ru.kafpin.lab2.repository.CustomerRepository;
+import ru.kafpin.lab2.repository.CityRepository;
 
 import java.util.List;
 import java.util.Optional;
@@ -18,6 +19,9 @@ public class CustomerController {
 
     @Autowired
     private  CustomerRepository customerRepository;
+
+    @Autowired
+    private CityRepository cityRepository;
 
     @GetMapping("/customers")
     public String customersPage(Model model) {
@@ -62,6 +66,7 @@ public class CustomerController {
     @GetMapping("/customers/add")
     public String addCustomerPage(Model model) {
         model.addAttribute("customer", new Customer());
+        model.addAttribute("cities", cityRepository.findAll());
 
         return "add_customer";
     }

@@ -1,34 +1,100 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Информация о покупателе</title>
     <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 
 <body>
-<div class="container">
+<div class="container" th:with="customer=${selectedCustomer}">
     <h1>Информация о покупателе</h1>
 
     <div class="customer-details">
-        <p>Фамилия: <strong th:text="${selectedCustomer.lastName}"></strong></p>
-        <p>Имя: <strong th:text="${selectedCustomer.name}"></strong></p>
-        <p>Отчество: <strong th:text="${selectedCustomer.patronymic}"></strong></p>
-        <p>Пол: <strong th:text="${selectedCustomer.gender}"></strong></p>
-        <p>Национальность: <strong th:text="${selectedCustomer.nationality}"></strong></p>
-        <p>Рост: <strong th:text="${selectedCustomer.height}"></strong></p>
-        <p>Вес: <strong th:text="${selectedCustomer.weight}"></strong></p>
-        <p>Дата рождения: <strong th:text="${selectedCustomer.birthDate}"></strong></p>
-        <p>Телефон: <strong th:text="${selectedCustomer.phoneNumber}"></strong></p>
-        <p>Номер кредитной карты: <strong th:text="${selectedCustomer.creditCardNumber}"></strong></p>
-        <p>Номер банковского счёта: <strong th:text="${selectedCustomer.bankAccountNumber}"></strong></p>
+        <p>ID:
+            <strong th:text="${customer.id}"></strong>
+        </p>
+        <p>Фамилия:
+            <strong th:text="${customer.lastName}"></strong>
+        </p>
+        <p>Имя:
+            <strong th:text="${customer.name}"></strong>
+        </p>
+        <p>Отчество:
+            <strong th:text="${customer.patronymic}"></strong>
+        </p>
+        <p>Пол:
+            <strong th:text="${customer.gender}"></strong>
+        </p>
+        <p>Национальность:
+            <strong th:text="${customer.nationality}"></strong>
+        </p>
+        <p>Рост, см:
+            <strong th:text="${customer.height}"></strong>
+        </p>
+        <p>Вес, кг:
+            <strong th:text="${customer.weight}"></strong>
+        </p>
+        <p>Дата рождения:
+            <strong th:text="${customer.birthDate}"></strong>
+        </p>
+        <p>Телефон:
+            <strong th:text="${customer.phoneNumber}"></strong>
+        </p>
+        <p>Номер кредитной карты:
+            <strong th:text="${customer.creditCardNumber}"></strong>
+        </p>
+        <p>Номер банковского счёта:
+            <strong th:text="${customer.bankAccountNumber}"></strong>
+        </p>
     </div>
 
-    <p>
+    <h2 class="details-title">Домашний адрес</h2>
+
+    <div class="customer-details"
+         th:if="${customer.address != null}"
+         th:with="address=${customer.address}">
+        <p>Почтовый индекс:
+            <strong th:text="${address.postalCode}"></strong>
+        </p>
+        <p>Страна:
+            <strong th:text="${address.country}"></strong>
+        </p>
+        <p>Область:
+            <strong th:text="${address.region}"></strong>
+        </p>
+        <p>Район:
+            <strong th:text="${address.district}"></strong>
+        </p>
+        <p>Город:
+            <strong th:text="${address.city.name}"></strong>
+        </p>
+        <p>Улица:
+            <strong th:text="${address.street}"></strong>
+        </p>
+        <p>Дом:
+            <strong th:text="${address.house}"></strong>
+        </p>
+        <p>Квартира:
+            <strong th:text="${address.apartment}"></strong>
+        </p>
+    </div>
+
+    <div class="empty-state" th:if="${customer.address == null}">
+        Домашний адрес пока не указан.
+    </div>
+
+    <div class="details-actions">
+        <a class="btn"
+           th:href="@{/customers/update/{id}(id=${customer.id})}">
+            Редактировать
+        </a>
+
         <a class="btn btn-secondary" th:href="@{/customers}">
             Вернуться к списку
         </a>
-    </p>
+    </div>
 </div>
 </body>
 </html>

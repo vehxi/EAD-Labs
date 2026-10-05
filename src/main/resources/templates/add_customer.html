@@ -119,6 +119,19 @@
                    required>
         </p>
 
+        <p class="form-field">
+            <label for="cityId">Город:</label>
+
+            <select id="cityId" name="cityId" required>
+                <option value="" disabled selected>Выберите город</option>
+
+                <option th:each="city : ${cities}"
+                        th:value="${city.id}"
+                        th:text="${city.name}">
+                </option>
+            </select>
+        </p>
+
         <p class="form-actions">
             <input type="submit" value="Отправить">
             <input type="reset" value="Сброс">
