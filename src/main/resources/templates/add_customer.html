@@ -119,6 +119,61 @@
                    required>
         </p>
 
+        <h2 class="details-title">Домашний адрес</h2>
+
+        <p class="form-field">
+            <label for="postalCode">Почтовый индекс:</label>
+            <input type="text"
+                   id="postalCode"
+                   th:field="*{address.postalCode}"
+                   required>
+        </p>
+
+        <p class="form-field">
+            <label for="country">Страна:</label>
+            <input type="text"
+                   id="country"
+                   th:field="*{address.country}"
+                   required>
+        </p>
+
+        <p class="form-field">
+            <label for="region">Область:</label>
+            <input type="text"
+                   id="region"
+                   th:field="*{address.region}">
+        </p>
+
+        <p class="form-field">
+            <label for="district">Район:</label>
+            <input type="text"
+                   id="district"
+                   th:field="*{address.district}">
+        </p>
+
+        <p class="form-field">
+            <label for="street">Улица:</label>
+            <input type="text"
+                   id="street"
+                   th:field="*{address.street}"
+                   required>
+        </p>
+
+        <p class="form-field">
+            <label for="house">Дом:</label>
+            <input type="text"
+                   id="house"
+                   th:field="*{address.house}"
+                   required>
+        </p>
+
+        <p class="form-field">
+            <label for="apartment">Квартира:</label>
+            <input type="text"
+                   id="apartment"
+                   th:field="*{address.apartment}">
+        </p>
+
         <p class="form-field">
             <label for="cityId">Город:</label>
 

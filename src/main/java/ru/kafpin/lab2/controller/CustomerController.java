@@ -10,6 +10,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import ru.kafpin.lab2.entity.Customer;
 import ru.kafpin.lab2.repository.CustomerRepository;
 import ru.kafpin.lab2.repository.CityRepository;
+import org.springframework.http.HttpStatus;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.server.ResponseStatusException;
+import ru.kafpin.lab2.entity.Address;
+import ru.kafpin.lab2.entity.City;
+import ru.kafpin.lab2.repository.AddressRepository;
 
 import java.util.List;
 import java.util.Optional;
@@ -22,6 +29,9 @@ public class CustomerController {
 
     @Autowired
     private CityRepository cityRepository;
+
+    @Autowired
+    private AddressRepository addressRepository;
 
     @GetMapping("/customers")
     public String customersPage(Model model) {
@@ -65,16 +75,47 @@ public class CustomerController {
 
     @GetMapping("/customers/add")
     public String addCustomerPage(Model model) {
-        model.addAttribute("customer", new Customer());
+        Customer customer = new Customer();
+        customer.setAddress(new Address());
+
+        model.addAttribute("customer", customer);
         model.addAttribute("cities", cityRepository.findAll());
 
         return "add_customer";
     }
 
     @PostMapping("/customers/add")
+    @Transactional
     public String addCustomer(
-            @ModelAttribute Customer customer
+            @ModelAttribute Customer customer,
+            @RequestParam("cityId") Long cityId
     ) {
+        Optional<City> optionalCity = cityRepository.findById(cityId);
+
+        if (optionalCity.isEmpty()) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "Выбранный город не существует"
+            );
+        }
+
+        Address address = customer.getAddress();
+
+        if (address == null) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "Необходимо указать адрес"
+            );
+        }
+
+        customer.setId(null);
+        address.setId(null);
+
+        address.setCity(optionalCity.get());
+
+        Address savedAddress = addressRepository.save(address);
+        customer.setAddress(savedAddress);
+
         customerRepository.save(customer);
 
         return "redirect:/customers";
@@ -108,6 +149,12 @@ public class CustomerController {
                 !customerRepository.existsById(customer.getId())) {
             return "redirect:/customers";
         }
+
+        Customer savedCustomer = customerRepository
+                .findById(customer.getId())
+                .orElseThrow();
+
+        customer.setAddress(savedCustomer.getAddress());
 
         customerRepository.save(customer);
 
