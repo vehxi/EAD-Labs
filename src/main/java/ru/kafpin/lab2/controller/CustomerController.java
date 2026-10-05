@@ -1,5 +1,6 @@
 package ru.kafpin.lab2.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,11 +16,8 @@ import java.util.Optional;
 @Controller
 public class CustomerController {
 
-    private final CustomerRepository customerRepository;
-
-    public CustomerController(CustomerRepository customerRepository) {
-        this.customerRepository = customerRepository;
-    }
+    @Autowired
+    private  CustomerRepository customerRepository;
 
     @GetMapping("/customers")
     public String customersPage(Model model) {
