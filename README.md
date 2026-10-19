@@ -58,53 +58,6 @@
 
   Папка api/lab4 содержит коллекцию запросов для проверки CRUD, поиска и статистики. Запросы сохраняются в YAML-файлах вместе с проектом.
 
-### Структура проекта
-
-api/
-└── lab4/
-    ├── .gitignore
-    ├── opencollection.yml
-    ├── Получить всех покупателей.yml
-    ├── Получить покупателя по ID.yml
-    ├── Создать покупателя.yml
-    ├── Обновить покупателя.yml
-    ├── Удалить покупателя.yml
-    ├── Статистика покупателей.yml
-    └── Поиск покупателей.yml
-src/
-├── main/
-│   ├── java/
-│   │   └── ru/kafpin/lab2/
-│   │       ├── Lab2Application.java
-│   │       ├── controller/
-│   │       │   ├── CustomerController.java
-│   │       │   ├── CustomerRestController.java
-│   │       │   └── CustomerFilter.java
-│   │       ├── entity/
-│   │       │   ├── Customer.java
-│   │       │   ├── Address.java
-│   │       │   └── City.java
-│   │       └── repository/
-│   │           ├── CustomerRepository.java
-│   │           ├── AddressRepository.java
-│   │           └── CityRepository.java
-│   └── resources/
-│       ├── static/
-│       │   └── css/
-│       │       └── style.css
-│       ├── templates/
-│       │   ├── customers.html
-│       │   ├── customer_details.html
-│       │   ├── add_customer.html
-│       │   └── edit_customer.html
-│       ├── application.properties
-│       ├── messages.properties
-│       └── data.sql
-└── test/
-    └── java/
-        └── ru/kafpin/lab2/
-            └── Lab2ApplicationTests.java
-
 ## Методы REST API
 
 Базовый адрес: http://localhost:8080/api.
