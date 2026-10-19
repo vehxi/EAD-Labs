@@ -322,3 +322,43 @@ select:focus-visible {
     outline: 2px solid var(--dark);
     outline-offset: 3px;
 }
+
+.field-error,
+.form-error {
+    color: #a12622;
+    font-size: 14px;
+    overflow-wrap: anywhere;
+}
+
+.input-error {
+    border-color: #a12622 !important;
+}
+
+.filter-form {
+    max-width: none;
+    margin-bottom: 28px;
+}
+
+.filter-hint {
+    color: var(--muted-text);
+}
+
+.filter-fields {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0 16px;
+}
+
+.filter-fields .form-field {
+    min-width: 0;
+}
+
+.table-scroll {
+    overflow-x: auto;
+}
+
+@media (max-width: 600px) {
+    .filter-fields {
+        grid-template-columns: 1fr;
+    }
+}

@@ -1,7 +1,8 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Покупатели</title>
     <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
@@ -16,11 +17,63 @@
         </a>
     </p>
 
+    <form class="filter-form" th:action="@{/customers}" th:object="${filter}" method="get">
+        <h2 class="details-title">Поиск покупателей</h2>
+        <p class="filter-hint">Заполненные критерии применяются вместе.</p>
+        <div class="filter-fields">
+            <p class="form-field">
+                <label for="filter-lastName">Фамилия:</label>
+                <input type="text" id="filter-lastName" th:field="*{lastName}" maxlength="255">
+                <span class="field-error" th:if="${#fields.hasErrors('lastName')}"
+                      th:errors="*{lastName}"></span>
+            </p>
+            <p class="form-field">
+                <label for="filter-name">Имя:</label>
+                <input type="text" id="filter-name" th:field="*{name}" maxlength="255">
+                <span class="field-error" th:if="${#fields.hasErrors('name')}"
+                      th:errors="*{name}"></span>
+            </p>
+            <p class="form-field">
+                <label for="filter-gender">Пол:</label>
+                <select id="filter-gender" th:field="*{gender}">
+                    <option value="">Любой</option>
+                    <option value="Мужской">Мужской</option>
+                    <option value="Женский">Женский</option>
+                </select>
+                <span class="field-error" th:if="${#fields.hasErrors('gender')}"
+                      th:errors="*{gender}"></span>
+            </p>
+            <p class="form-field">
+                <label for="filter-nationality">Национальность:</label>
+                <input type="text" id="filter-nationality" th:field="*{nationality}" maxlength="255">
+                <span class="field-error" th:if="${#fields.hasErrors('nationality')}"
+                      th:errors="*{nationality}"></span>
+            </p>
+            <p class="form-field">
+                <label for="filter-city">Город:</label>
+                <input type="text" id="filter-city" th:field="*{city}" maxlength="255">
+                <span class="field-error" th:if="${#fields.hasErrors('city')}"
+                      th:errors="*{city}"></span>
+            </p>
+            <p class="form-field">
+                <label for="filter-street">Улица:</label>
+                <input type="text" id="filter-street" th:field="*{street}" maxlength="255">
+                <span class="field-error" th:if="${#fields.hasErrors('street')}"
+                      th:errors="*{street}"></span>
+            </p>
+        </div>
+        <p class="form-actions">
+            <input type="submit" value="Найти">
+            <a class="btn btn-secondary" th:href="@{/customers}">Сбросить</a>
+        </p>
+    </form>
+
     <span class="empty-state" th:if="${customers.size() == 0}">
-        Список покупателей пустой
+        Покупатели не найдены
     </span>
 
-    <table th:if="${customers.size() > 0}" class="table table-hover">
+    <div class="table-scroll" th:if="${customers.size() > 0}">
+    <table class="table table-hover">
         <thead class="thead-dark">
         <tr>
             <td>Фамилия</td>
@@ -61,6 +114,7 @@
         </tr>
         </tbody>
     </table>
+    </div>
 </div>
 </body>
 </html>

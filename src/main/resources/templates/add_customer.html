@@ -1,7 +1,8 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Добавление покупателя</title>
     <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
@@ -11,10 +12,14 @@
     <h1>Добавление покупателя</h1>
 
     <form class="customer-form"
-          action="#"
           th:action="@{/customers/add}"
           th:object="${customer}"
           method="post">
+
+        <p class="form-error" role="alert" th:if="${#fields.hasAnyErrors()}">
+            Исправьте ошибки в полях формы.
+        </p>
+        <p class="field-error" th:if="${#fields.hasErrors('id')}" th:errors="*{id}"></p>
 
         <p class="form-field">
             <label for="lastName">Фамилия:</label>
@@ -22,7 +27,13 @@
                    id="lastName"
                    placeholder="Введите фамилию"
                    th:field="*{lastName}"
+                   th:errorclass="input-error"
+                   th:attr="aria-invalid=${#fields.hasErrors('lastName')}"
+                   aria-describedby="lastName-error"
                    required>
+            <span id="lastName-error" class="field-error"
+                  th:if="${#fields.hasErrors('lastName')}"
+                  th:errors="*{lastName}"></span>
         </p>
 
         <p class="form-field">
@@ -31,7 +42,13 @@
                    id="name"
                    placeholder="Введите имя"
                    th:field="*{name}"
+                   th:errorclass="input-error"
+                   th:attr="aria-invalid=${#fields.hasErrors('name')}"
+                   aria-describedby="name-error"
                    required>
+            <span id="name-error" class="field-error"
+                  th:if="${#fields.hasErrors('name')}"
+                  th:errors="*{name}"></span>
         </p>
 
         <p class="form-field">
@@ -40,16 +57,28 @@
                    id="patronymic"
                    placeholder="Введите отчество"
                    th:field="*{patronymic}"
+                   th:errorclass="input-error"
+                   th:attr="aria-invalid=${#fields.hasErrors('patronymic')}"
+                   aria-describedby="patronymic-error"
                    required>
+            <span id="patronymic-error" class="field-error"
+                  th:if="${#fields.hasErrors('patronymic')}"
+                  th:errors="*{patronymic}"></span>
         </p>
 
         <p class="form-field">
             <label for="gender">Пол:</label>
-            <input type="text"
-                   id="gender"
-                   placeholder="Введите пол"
-                   th:field="*{gender}"
-                   required>
+            <select id="gender" th:field="*{gender}"
+                   th:errorclass="input-error"
+                   th:attr="aria-invalid=${#fields.hasErrors('gender')}"
+                   aria-describedby="gender-error" required>
+                <option value="" disabled>Выберите пол</option>
+                <option value="Мужской">Мужской</option>
+                <option value="Женский">Женский</option>
+            </select>
+            <span id="gender-error" class="field-error"
+                  th:if="${#fields.hasErrors('gender')}"
+                  th:errors="*{gender}"></span>
         </p>
 
         <p class="form-field">
@@ -58,7 +87,13 @@
                    id="nationality"
                    placeholder="Введите национальность"
                    th:field="*{nationality}"
+                   th:errorclass="input-error"
+                   th:attr="aria-invalid=${#fields.hasErrors('nationality')}"
+                   aria-describedby="nationality-error"
                    required>
+            <span id="nationality-error" class="field-error"
+                  th:if="${#fields.hasErrors('nationality')}"
+                  th:errors="*{nationality}"></span>
         </p>
 
         <p class="form-field">
@@ -66,9 +101,16 @@
             <input type="number"
                    id="height"
                    min="1"
+                   max="300"
                    placeholder="Введите рост"
                    th:field="*{height}"
+                   th:errorclass="input-error"
+                   th:attr="aria-invalid=${#fields.hasErrors('height')}"
+                   aria-describedby="height-error"
                    required>
+            <span id="height-error" class="field-error"
+                  th:if="${#fields.hasErrors('height')}"
+                  th:errors="*{height}"></span>
         </p>
 
         <p class="form-field">
@@ -76,10 +118,17 @@
             <input type="number"
                    id="weight"
                    min="0.1"
+                   max="1000"
                    step="0.1"
                    placeholder="Введите вес"
                    th:field="*{weight}"
+                   th:errorclass="input-error"
+                   th:attr="aria-invalid=${#fields.hasErrors('weight')}"
+                   aria-describedby="weight-error"
                    required>
+            <span id="weight-error" class="field-error"
+                  th:if="${#fields.hasErrors('weight')}"
+                  th:errors="*{weight}"></span>
         </p>
 
         <p class="form-field">
@@ -87,7 +136,13 @@
             <input type="date"
                    id="birthDate"
                    th:field="*{birthDate}"
+                   th:errorclass="input-error"
+                   th:attr="aria-invalid=${#fields.hasErrors('birthDate')}"
+                   aria-describedby="birthDate-error"
                    required>
+            <span id="birthDate-error" class="field-error"
+                  th:if="${#fields.hasErrors('birthDate')}"
+                  th:errors="*{birthDate}"></span>
         </p>
 
         <p class="form-field">
@@ -96,7 +151,13 @@
                    id="phoneNumber"
                    placeholder="Введите номер телефона"
                    th:field="*{phoneNumber}"
+                   th:errorclass="input-error"
+                   th:attr="aria-invalid=${#fields.hasErrors('phoneNumber')}"
+                   aria-describedby="phoneNumber-error"
                    required>
+            <span id="phoneNumber-error" class="field-error"
+                  th:if="${#fields.hasErrors('phoneNumber')}"
+                  th:errors="*{phoneNumber}"></span>
         </p>
 
         <p class="form-field">
@@ -106,7 +167,13 @@
                    inputmode="numeric"
                    placeholder="Введите номер карты"
                    th:field="*{creditCardNumber}"
+                   th:errorclass="input-error"
+                   th:attr="aria-invalid=${#fields.hasErrors('creditCardNumber')}"
+                   aria-describedby="creditCardNumber-error"
                    required>
+            <span id="creditCardNumber-error" class="field-error"
+                  th:if="${#fields.hasErrors('creditCardNumber')}"
+                  th:errors="*{creditCardNumber}"></span>
         </p>
 
         <p class="form-field">
@@ -116,7 +183,13 @@
                    inputmode="numeric"
                    placeholder="Введите номер счёта"
                    th:field="*{bankAccountNumber}"
+                   th:errorclass="input-error"
+                   th:attr="aria-invalid=${#fields.hasErrors('bankAccountNumber')}"
+                   aria-describedby="bankAccountNumber-error"
                    required>
+            <span id="bankAccountNumber-error" class="field-error"
+                  th:if="${#fields.hasErrors('bankAccountNumber')}"
+                  th:errors="*{bankAccountNumber}"></span>
         </p>
 
         <h2 class="details-title">Домашний адрес</h2>
@@ -126,7 +199,13 @@
             <input type="text"
                    id="postalCode"
                    th:field="*{address.postalCode}"
+                   th:errorclass="input-error"
+                   th:attr="aria-invalid=${#fields.hasErrors('address.postalCode')}"
+                   aria-describedby="address-postalCode-error"
                    required>
+            <span id="address-postalCode-error" class="field-error"
+                  th:if="${#fields.hasErrors('address.postalCode')}"
+                  th:errors="*{address.postalCode}"></span>
         </p>
 
         <p class="form-field">
@@ -134,21 +213,39 @@
             <input type="text"
                    id="country"
                    th:field="*{address.country}"
+                   th:errorclass="input-error"
+                   th:attr="aria-invalid=${#fields.hasErrors('address.country')}"
+                   aria-describedby="address-country-error"
                    required>
+            <span id="address-country-error" class="field-error"
+                  th:if="${#fields.hasErrors('address.country')}"
+                  th:errors="*{address.country}"></span>
         </p>
 
         <p class="form-field">
             <label for="region">Область:</label>
             <input type="text"
                    id="region"
-                   th:field="*{address.region}">
+                   th:field="*{address.region}"
+                   th:errorclass="input-error"
+                   th:attr="aria-invalid=${#fields.hasErrors('address.region')}"
+                   aria-describedby="address-region-error">
+            <span id="address-region-error" class="field-error"
+                  th:if="${#fields.hasErrors('address.region')}"
+                  th:errors="*{address.region}"></span>
         </p>
 
         <p class="form-field">
             <label for="district">Район:</label>
             <input type="text"
                    id="district"
-                   th:field="*{address.district}">
+                   th:field="*{address.district}"
+                   th:errorclass="input-error"
+                   th:attr="aria-invalid=${#fields.hasErrors('address.district')}"
+                   aria-describedby="address-district-error">
+            <span id="address-district-error" class="field-error"
+                  th:if="${#fields.hasErrors('address.district')}"
+                  th:errors="*{address.district}"></span>
         </p>
 
         <p class="form-field">
@@ -156,7 +253,13 @@
             <input type="text"
                    id="street"
                    th:field="*{address.street}"
+                   th:errorclass="input-error"
+                   th:attr="aria-invalid=${#fields.hasErrors('address.street')}"
+                   aria-describedby="address-street-error"
                    required>
+            <span id="address-street-error" class="field-error"
+                  th:if="${#fields.hasErrors('address.street')}"
+                  th:errors="*{address.street}"></span>
         </p>
 
         <p class="form-field">
@@ -164,27 +267,46 @@
             <input type="text"
                    id="house"
                    th:field="*{address.house}"
+                   th:errorclass="input-error"
+                   th:attr="aria-invalid=${#fields.hasErrors('address.house')}"
+                   aria-describedby="address-house-error"
                    required>
+            <span id="address-house-error" class="field-error"
+                  th:if="${#fields.hasErrors('address.house')}"
+                  th:errors="*{address.house}"></span>
         </p>
 
         <p class="form-field">
             <label for="apartment">Квартира:</label>
             <input type="text"
                    id="apartment"
-                   th:field="*{address.apartment}">
+                   th:field="*{address.apartment}"
+                   th:errorclass="input-error"
+                   th:attr="aria-invalid=${#fields.hasErrors('address.apartment')}"
+                   aria-describedby="address-apartment-error">
+            <span id="address-apartment-error" class="field-error"
+                  th:if="${#fields.hasErrors('address.apartment')}"
+                  th:errors="*{address.apartment}"></span>
         </p>
 
         <p class="form-field">
             <label for="cityId">Город:</label>
 
-            <select id="cityId" name="cityId" required>
-                <option value="" disabled selected>Выберите город</option>
-
+            <select id="cityId" name="cityId" required
+                    th:attr="aria-invalid=${#fields.hasErrors('address.city')}"
+                    aria-describedby="cityId-error">
+                <option value="" disabled th:selected="${selectedCityId == ''}">
+                    Выберите город
+                </option>
                 <option th:each="city : ${cities}"
                         th:value="${city.id}"
-                        th:text="${city.name}">
+                        th:text="${city.name}"
+                        th:selected="${selectedCityId == city.id.toString()}">
                 </option>
             </select>
+            <span id="cityId-error" class="field-error"
+                  th:if="${#fields.hasErrors('address.city')}"
+                  th:errors="*{address.city}"></span>
         </p>
 
         <p class="form-actions">
