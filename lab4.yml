@@ -1,0 +1,231 @@
+opencollection: 1.0.0
+info:
+  name: lab4
+config:
+  proxy:
+    inherit: true
+    config:
+      protocol: http
+      hostname: ''
+      port: ''
+      auth:
+        username: ''
+        password: ''
+      bypassProxy: ''
+items:
+  - info:
+      name: Получить всех покупателей
+      type: http
+      seq: 1
+    http:
+      method: GET
+      url: http://localhost:8080/api/customers
+      auth: inherit
+    settings:
+      encodeUrl: true
+      timeout: 0
+      followRedirects: true
+      maxRedirects: 5
+      forwardAuthorizationHeader: false
+  - info:
+      name: Получить покупателя по ID
+      type: http
+      seq: 2
+    http:
+      method: GET
+      url: http://localhost:8080/api/customers/1
+      auth: inherit
+    settings:
+      encodeUrl: true
+      timeout: 0
+      followRedirects: true
+      maxRedirects: 5
+      forwardAuthorizationHeader: false
+  - info:
+      name: Создать покупателя
+      type: http
+      seq: 3
+    http:
+      method: POST
+      url: http://localhost:8080/api/customers
+      body:
+        type: json
+        data: |-
+          {
+            "lastName": "Петров",
+            "name": "Пётр",
+            "patronymic": "Петрович",
+            "gender": "Мужской",
+            "nationality": "Русский",
+            "height": 200,
+            "weight": 80.5,
+            "birthDate": "1998-04-12",
+            "phoneNumber": "+7 999 222-33-44",
+            "creditCardNumber": "2200 1234 5678 9012",
+            "bankAccountNumber": "40817810000000000001",
+            "address": {
+              "postalCode": "420111",
+              "country": "Россия",
+              "region": "Республика Татарстан",
+              "district": "Вахитовский",
+              "street": "Пушкина",
+              "house": "15",
+              "apartment": "7",
+              "city": {
+                "id": 1
+              }
+            }
+          }
+      auth: inherit
+    settings:
+      encodeUrl: true
+      timeout: 0
+      followRedirects: true
+      maxRedirects: 5
+      forwardAuthorizationHeader: false
+  - info:
+      name: Удалить покупателя
+      type: http
+      seq: 4
+    http:
+      method: DELETE
+      url: http://localhost:8080/api/customers/
+      body:
+        type: json
+        data: |-
+          {
+            "lastName": "Петров",
+            "name": "Пётр",
+            "patronymic": "Петрович",
+            "gender": "Мужской",
+            "nationality": "Русский",
+            "height": 182,
+            "weight": 80.5,
+            "birthDate": "1998-04-12",
+            "phoneNumber": "+7 999 222-33-44",
+            "creditCardNumber": "2200 1234 5678 9012",
+            "bankAccountNumber": "40817810000000000001",
+            "address": {
+              "postalCode": "420111",
+              "country": "Россия",
+              "region": "Республика Татарстан",
+              "district": "Вахитовский",
+              "street": "Пушкина",
+              "house": "15",
+              "apartment": "7",
+              "city": {
+                "id": 1
+              }
+            }
+          }
+      auth: inherit
+    settings:
+      encodeUrl: true
+      timeout: 0
+      followRedirects: true
+      maxRedirects: 5
+      forwardAuthorizationHeader: false
+  - info:
+      name: Обновить покупателя
+      type: http
+      seq: 5
+    http:
+      method: PUT
+      url: http://localhost:8080/api/customers/4
+      body:
+        type: json
+        data: |-
+          {
+            "lastName": "Петров",
+            "name": "Пётр",
+            "patronymic": "Петрович",
+            "gender": "Мужской",
+            "nationality": "Русский",
+            "height": 185,
+            "weight": 84,
+            "birthDate": "1998-04-12",
+            "phoneNumber": "+7 999 222-33-44",
+            "creditCardNumber": "2200 1234 5678 9012",
+            "bankAccountNumber": "40817810000000000001",
+            "address": {
+              "postalCode": "420111",
+              "country": "Россия",
+              "region": "Республика Татарстан",
+              "district": "Вахитовский",
+              "street": "Пушкина",
+              "house": "20",
+              "apartment": "7",
+              "city": {
+                "id": 1
+              }
+            }
+          }
+      auth: inherit
+    settings:
+      encodeUrl: true
+      timeout: 0
+      followRedirects: true
+      maxRedirects: 5
+      forwardAuthorizationHeader: false
+  - info:
+      name: Статистика покупателей
+      type: http
+      seq: 6
+    http:
+      method: GET
+      url: http://localhost:8080/api/customers/statistics
+      auth: inherit
+    settings:
+      encodeUrl: true
+      timeout: 0
+      followRedirects: true
+      maxRedirects: 5
+      forwardAuthorizationHeader: false
+  - info:
+      name: Поиск покупателей
+      type: http
+      seq: 7
+    http:
+      method: GET
+      url: http://localhost:8080/api/customers/search?gender=Мужской
+      params:
+        - name: name
+          value: Мария
+          type: query
+          disabled: true
+        - name: city
+          value: Казань
+          type: query
+          disabled: true
+        - name: gender
+          value: Мужской
+          type: query
+        - name: nationality
+          value: ''
+          type: query
+          disabled: true
+        - name: city
+          value: Москва
+          type: query
+          disabled: true
+        - name: street
+          value: Баумана
+          type: query
+          disabled: true
+      auth: inherit
+    settings:
+      encodeUrl: true
+      timeout: 0
+      followRedirects: true
+      maxRedirects: 5
+      forwardAuthorizationHeader: false
+bundled: true
+extensions:
+  bruno:
+    ignore:
+      - node_modules
+      - .git
+    presets:
+      requestType: http
+    exportedAt: '2026-10-19T12:32:24.654Z'
+    exportedUsing: Bruno

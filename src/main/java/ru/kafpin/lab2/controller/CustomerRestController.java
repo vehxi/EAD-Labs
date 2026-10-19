@@ -23,6 +23,10 @@ import org.springframework.web.bind.annotation.PutMapping;
 import java.util.Objects;
 import java.util.Map;
 import java.util.LinkedHashMap;
+import org.springframework.beans.propertyeditors.StringTrimmerEditor;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.ModelAttribute;
 
 import java.util.List;
 
@@ -30,14 +34,30 @@ import java.util.List;
 @RequestMapping("/api")
 public class CustomerRestController {
 
-    @Autowired
-    private CustomerRepository customerRepository;
+    private final CustomerRepository customerRepository;
 
-    @Autowired
-    private AddressRepository addressRepository;
+    private final AddressRepository addressRepository;
 
-    @Autowired
-    private CityRepository cityRepository;
+    private final CityRepository cityRepository;
+
+    public CustomerRestController(CustomerRepository customerRepository, AddressRepository addressRepository, CityRepository cityRepository) {
+        this.customerRepository = customerRepository;
+        this.addressRepository = addressRepository;
+        this.cityRepository = cityRepository;
+    }
+
+    @InitBinder("filter")
+    public void configureFilterBinding(WebDataBinder binder) {
+        binder.setAllowedFields(
+                "lastName", "name", "gender",
+                "nationality", "city", "street"
+        );
+
+        binder.registerCustomEditor(
+                String.class,
+                new StringTrimmerEditor(false)
+        );
+    }
 
     @GetMapping("/customers")
     public List<Customer> getCustomers() {
@@ -182,6 +202,21 @@ public class CustomerRestController {
 
         return statistics;
     }
+
+    @GetMapping("/customers/search")
+    public List<Customer> searchCustomers(
+            @Valid @ModelAttribute("filter") CustomerFilter filter
+    ) {
+        return customerRepository.search(
+                filter.getLastName(),
+                filter.getName(),
+                filter.getGender(),
+                filter.getNationality(),
+                filter.getCity(),
+                filter.getStreet()
+        );
+    }
+
 
     private boolean sameAddress(
             Address current,
