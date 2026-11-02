@@ -1,5 +1,6 @@
 package ru.kafpin.lab2.repository;
 
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -33,8 +34,11 @@ public class CityRepository {
     public Optional<City> findById(Long id) {
         String sql = "SELECT id, name FROM cities WHERE id = ?";
 
-        List<City> cities = jdbcTemplate.query(sql, cityMapper, id);
-
-        return cities.stream().findFirst();
+        try {
+            City city = jdbcTemplate.queryForObject(sql, cityMapper, id);
+            return Optional.ofNullable(city);
+        } catch (EmptyResultDataAccessException exception) {
+            return Optional.empty();
+        }
     }
 }
