@@ -46,6 +46,7 @@ public class CustomerRestController {
         this.cityRepository = cityRepository;
     }
 
+
     @InitBinder("filter")
     public void configureFilterBinding(WebDataBinder binder) {
         binder.setAllowedFields(
