@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
@@ -19,6 +20,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
@@ -26,10 +29,23 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Transactional
 class Lab2ApplicationTests {
 
-    @Autowired private MockMvc mvc;
-    @Autowired private CustomerRepository customers;
-    @Autowired private AddressRepository addresses;
-    @Autowired private CityRepository cities;
+    private final MockMvc mvc;
+    private final CustomerRepository customers;
+    private final AddressRepository addresses;
+    private final CityRepository cities;
+
+    @Autowired
+    Lab2ApplicationTests(
+            MockMvc mvc,
+            CustomerRepository customers,
+            AddressRepository addresses,
+            CityRepository cities
+    ) {
+        this.mvc = mvc;
+        this.customers = customers;
+        this.addresses = addresses;
+        this.cities = cities;
+    }
 
     @Test
     void pagesAndThreeSearchCombinationsWork() throws Exception {
@@ -173,6 +189,132 @@ class Lab2ApplicationTests {
         mvc.perform(get("/customers").param("city", "x".repeat(256)))
                 .andExpect(status().isOk())
                 .andExpect(model().attributeHasFieldErrors("filter", "city"));
+    }
+
+    @Test
+    void restCrudPreservesAddressAndReturnsGeneratedIdentifiers() throws Exception {
+        long customerCount = customers.count();
+        long addressCount = addresses.count();
+        String json = validJson(cities.findAll().getFirst().getId());
+
+        mvc.perform(post("/api/customers")
+                        .contentType(MediaType.APPLICATION_JSON).content(json))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.id").isNumber())
+                .andExpect(jsonPath("$.address.id").isNumber())
+                .andExpect(jsonPath("$.address.city.name").value("Казань"));
+
+        Customer saved = customers.search("Тестов", "", "", "", "", "").getFirst();
+        Long id = saved.getId();
+        Long oldAddressId = saved.getAddress().getId();
+        assertThat(customers.count()).isEqualTo(customerCount + 1);
+        assertThat(addresses.count()).isEqualTo(addressCount + 1);
+
+        mvc.perform(get("/api/customers/{id}", id))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.birthDate").value("2000-01-01"))
+                .andExpect(jsonPath("$.address.street").value("Ленина"));
+
+        mvc.perform(put("/api/customers/{id}", id)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(json.replace("Ленина", "Новая")))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.address.street").value("Новая"));
+
+        Customer updated = customers.findById(id).orElseThrow();
+        assertThat(updated.getAddress().getId()).isNotEqualTo(oldAddressId);
+        assertThat(addresses.findById(oldAddressId).orElseThrow().getStreet()).isEqualTo("Ленина");
+        assertThat(customers.count()).isEqualTo(customerCount + 1);
+        assertThat(addresses.count()).isEqualTo(addressCount + 2);
+
+        mvc.perform(delete("/api/customers/{id}", id))
+                .andExpect(status().isNoContent());
+        assertThat(customers.existsById(id)).isFalse();
+        assertThat(customers.count()).isEqualTo(customerCount);
+        mvc.perform(get("/api/customers/{id}", id))
+                .andExpect(status().isNotFound());
+        mvc.perform(delete("/api/customers/{id}", id))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void restSearchStatisticsAndInvalidInputWork() throws Exception {
+        mvc.perform(get("/api/customers"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(2)));
+        mvc.perform(get("/api/customers/search")
+                        .param("city", "каз").param("street", "баум"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(1)))
+                .andExpect(jsonPath("$[0].lastName").value("Иванов"));
+        mvc.perform(get("/api/customers/search").param("name", "' OR 1=1 --"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(0)));
+        mvc.perform(get("/api/customers/statistics"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.totalCustomers").value(2))
+                .andExpect(jsonPath("$.averageHeight").value(174.0))
+                .andExpect(jsonPath("$.averageWeight").value(67.85))
+                .andExpect(jsonPath("$.customersByCity.Казань").value(2));
+
+        long customerCount = customers.count();
+        long addressCount = addresses.count();
+        mvc.perform(post("/api/customers")
+                        .contentType(MediaType.APPLICATION_JSON).content(validJson(999999)))
+                .andExpect(status().isNotFound());
+        mvc.perform(post("/api/customers")
+                        .contentType(MediaType.APPLICATION_JSON).content(validJson(0)))
+                .andExpect(status().isBadRequest());
+        mvc.perform(post("/api/customers")
+                        .contentType(MediaType.APPLICATION_JSON).content("{}"))
+                .andExpect(status().isBadRequest());
+        mvc.perform(get("/api/customers/-1"))
+                .andExpect(status().isBadRequest());
+        assertThat(customers.count()).isEqualTo(customerCount);
+        assertThat(addresses.count()).isEqualTo(addressCount);
+    }
+
+    @Test
+    void htmlDeletionKeepsAddressAndHandlesMissingCustomer() throws Exception {
+        Customer customer = customers.findAll().getFirst();
+        Long addressId = customer.getAddress().getId();
+
+        mvc.perform(get("/customers/delete/{id}", customer.getId()))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/customers"));
+
+        assertThat(customers.findById(customer.getId())).isEmpty();
+        assertThat(addresses.findById(addressId)).isPresent();
+        mvc.perform(get("/customers/delete/{id}", customer.getId()))
+                .andExpect(status().is3xxRedirection());
+    }
+
+    private String validJson(long cityId) {
+        return """
+                {
+                  "lastName": "Тестов",
+                  "name": "Пётр",
+                  "patronymic": "Иванович",
+                  "gender": "Мужской",
+                  "nationality": "Русский",
+                  "height": 180,
+                  "weight": 75.5,
+                  "birthDate": "2000-01-01",
+                  "phoneNumber": "+7 999 111-22-33",
+                  "creditCardNumber": "2200 1234 5678 9012",
+                  "bankAccountNumber": "40817810000001234567",
+                  "address": {
+                    "postalCode": "420111",
+                    "country": "Россия",
+                    "region": "Татарстан",
+                    "district": "",
+                    "street": "Ленина",
+                    "house": "1",
+                    "apartment": "",
+                    "city": {"id": %d}
+                  }
+                }
+                """.formatted(cityId);
     }
 
     private MultiValueMap<String, String> validForm() {

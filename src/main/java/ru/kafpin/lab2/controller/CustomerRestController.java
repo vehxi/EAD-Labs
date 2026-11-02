@@ -1,34 +1,33 @@
 package ru.kafpin.lab2.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import ru.kafpin.lab2.entity.Customer;
-import ru.kafpin.lab2.repository.CustomerRepository;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.server.ResponseStatusException;
 import jakarta.validation.Valid;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import ru.kafpin.lab2.entity.Address;
-import ru.kafpin.lab2.entity.City;
-import ru.kafpin.lab2.repository.AddressRepository;
-import ru.kafpin.lab2.repository.CityRepository;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import java.util.Objects;
-import java.util.Map;
-import java.util.LinkedHashMap;
 import org.springframework.beans.propertyeditors.StringTrimmerEditor;
+import org.springframework.http.HttpStatus;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
+import ru.kafpin.lab2.entity.Address;
+import ru.kafpin.lab2.entity.City;
+import ru.kafpin.lab2.entity.Customer;
+import ru.kafpin.lab2.repository.AddressRepository;
+import ru.kafpin.lab2.repository.CityRepository;
+import ru.kafpin.lab2.repository.CustomerRepository;
 
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 @RestController
 @RequestMapping("/api")
@@ -40,12 +39,15 @@ public class CustomerRestController {
 
     private final CityRepository cityRepository;
 
-    public CustomerRestController(CustomerRepository customerRepository, AddressRepository addressRepository, CityRepository cityRepository) {
+    public CustomerRestController(
+            CustomerRepository customerRepository,
+            AddressRepository addressRepository,
+            CityRepository cityRepository
+    ) {
         this.customerRepository = customerRepository;
         this.addressRepository = addressRepository;
         this.cityRepository = cityRepository;
     }
-
 
     @InitBinder("filter")
     public void configureFilterBinding(WebDataBinder binder) {
@@ -217,7 +219,6 @@ public class CustomerRestController {
                 filter.getStreet()
         );
     }
-
 
     private boolean sameAddress(
             Address current,

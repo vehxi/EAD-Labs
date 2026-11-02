@@ -1,7 +1,6 @@
 package ru.kafpin.lab2.controller;
 
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.StringTrimmerEditor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -30,14 +29,21 @@ import java.util.Optional;
 @Controller
 public class CustomerController {
 
-    @Autowired
-    private CustomerRepository customerRepository;
+    private final CustomerRepository customerRepository;
 
-    @Autowired
-    private CityRepository cityRepository;
+    private final CityRepository cityRepository;
 
-    @Autowired
-    private AddressRepository addressRepository;
+    private final AddressRepository addressRepository;
+
+    public CustomerController(
+            CustomerRepository customerRepository,
+            CityRepository cityRepository,
+            AddressRepository addressRepository
+    ) {
+        this.customerRepository = customerRepository;
+        this.cityRepository = cityRepository;
+        this.addressRepository = addressRepository;
+    }
 
     @InitBinder({"customer", "filter"})
     public void configureBinding(WebDataBinder binder) {
