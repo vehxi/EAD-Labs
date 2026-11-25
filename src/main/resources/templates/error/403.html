@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Доступ запрещён</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<header class="site-header">
+    <div class="site-header-inner">
+        <a class="brand" th:href="@{/customers}">
+            <span class="brand-mark" aria-hidden="true"></span>
+            Реестр покупателей
+        </a>
+    </div>
+</header>
+
+<main class="container container-error">
+    <section class="error-card" aria-labelledby="error-title">
+        <p class="error-code">Ошибка 403</p>
+        <h1 id="error-title">Доступ запрещён</h1>
+        <p class="error-description"
+           th:text="${path != null and #strings.startsWith(path, '/customers/update/')}
+                    ? 'Редактировать данные покупателей может только администратор.'
+                    : 'У вас нет доступа к этой странице или действию.'">
+            У вас нет доступа к этой странице или действию.
+        </p>
+        <a class="btn" th:href="@{/customers}">
+            <span aria-hidden="true">←</span> К списку покупателей
+        </a>
+    </section>
+</main>
+</body>
+</html>

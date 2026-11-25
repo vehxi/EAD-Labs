@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<html lang="ru" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -8,113 +8,126 @@
 </head>
 
 <body>
-<div class="container">
-    <h1>Покупатели</h1>
+<header class="site-header">
+    <div class="site-header-inner">
+        <a class="brand" th:href="@{/customers}">
+            <span class="brand-mark" aria-hidden="true"></span>
+            Реестр покупателей
+        </a>
+        <form th:action="@{/logout}" method="post">
+            <span>Вы вошли как <strong sec:authentication="name"></strong></span>
+            <button class="btn btn-secondary" type="submit">Выйти</button>
+        </form>
+    </div>
+</header>
 
-    <p class="page-actions">
-        <a class="btn" th:href="@{/customers/add}">
+<main class="container container-registry">
+    <header class="page-heading registry-heading">
+        <h1>Покупатели</h1>
+        <a class="btn" th:href="@{/customers/add}" sec:authorize="hasRole('ADMIN')">
+            <span class="button-icon" aria-hidden="true">+</span>
             Добавить покупателя
         </a>
-    </p>
+    </header>
 
-    <form class="filter-form" th:action="@{/customers}" th:object="${filter}" method="get">
-        <h2 class="details-title">Поиск покупателей</h2>
-        <p class="filter-hint">Заполненные критерии применяются вместе.</p>
-        <div class="filter-fields">
-            <p class="form-field">
-                <label for="filter-lastName">Фамилия:</label>
-                <input type="text" id="filter-lastName" th:field="*{lastName}" maxlength="255">
-                <span class="field-error" th:if="${#fields.hasErrors('lastName')}"
-                      th:errors="*{lastName}"></span>
-            </p>
-            <p class="form-field">
-                <label for="filter-name">Имя:</label>
-                <input type="text" id="filter-name" th:field="*{name}" maxlength="255">
-                <span class="field-error" th:if="${#fields.hasErrors('name')}"
-                      th:errors="*{name}"></span>
-            </p>
-            <p class="form-field">
-                <label for="filter-gender">Пол:</label>
-                <select id="filter-gender" th:field="*{gender}">
-                    <option value="">Любой</option>
-                    <option value="Мужской">Мужской</option>
-                    <option value="Женский">Женский</option>
-                </select>
-                <span class="field-error" th:if="${#fields.hasErrors('gender')}"
-                      th:errors="*{gender}"></span>
-            </p>
-            <p class="form-field">
-                <label for="filter-nationality">Национальность:</label>
-                <input type="text" id="filter-nationality" th:field="*{nationality}" maxlength="255">
-                <span class="field-error" th:if="${#fields.hasErrors('nationality')}"
-                      th:errors="*{nationality}"></span>
-            </p>
-            <p class="form-field">
-                <label for="filter-city">Город:</label>
-                <input type="text" id="filter-city" th:field="*{city}" maxlength="255">
-                <span class="field-error" th:if="${#fields.hasErrors('city')}"
-                      th:errors="*{city}"></span>
-            </p>
-            <p class="form-field">
-                <label for="filter-street">Улица:</label>
-                <input type="text" id="filter-street" th:field="*{street}" maxlength="255">
-                <span class="field-error" th:if="${#fields.hasErrors('street')}"
-                      th:errors="*{street}"></span>
-            </p>
-        </div>
-        <p class="form-actions">
-            <input type="submit" value="Найти">
-            <a class="btn btn-secondary" th:href="@{/customers}">Сбросить</a>
-        </p>
-    </form>
+    <div class="workspace">
+        <form class="filter-form" th:action="@{/customers}" th:object="${filter}" method="get">
+            <h2>Поиск</h2>
+            <p class="filter-hint">Можно заполнить несколько полей.</p>
+            <div class="filter-fields">
+                <p class="form-field">
+                    <label for="filter-lastName">Фамилия:</label>
+                    <input type="text" id="filter-lastName" th:field="*{lastName}"
+                           th:attr="aria-invalid=${#fields.hasErrors('lastName')},aria-describedby=${#fields.hasErrors('lastName')} ? 'filter-lastName-error' : null" maxlength="255">
+                    <span id="filter-lastName-error" class="field-error" th:if="${#fields.hasErrors('lastName')}"
+                          th:errors="*{lastName}"></span>
+                </p>
+                <p class="form-field">
+                    <label for="filter-name">Имя:</label>
+                    <input type="text" id="filter-name" th:field="*{name}"
+                           th:attr="aria-invalid=${#fields.hasErrors('name')},aria-describedby=${#fields.hasErrors('name')} ? 'filter-name-error' : null" maxlength="255">
+                    <span id="filter-name-error" class="field-error" th:if="${#fields.hasErrors('name')}"
+                          th:errors="*{name}"></span>
+                </p>
+                <p class="form-field">
+                    <label for="filter-gender">Пол:</label>
+                    <select id="filter-gender" th:field="*{gender}"
+                           th:attr="aria-invalid=${#fields.hasErrors('gender')},aria-describedby=${#fields.hasErrors('gender')} ? 'filter-gender-error' : null">
+                        <option value="">Любой</option>
+                        <option value="Мужской">Мужской</option>
+                        <option value="Женский">Женский</option>
+                    </select>
+                    <span id="filter-gender-error" class="field-error" th:if="${#fields.hasErrors('gender')}"
+                          th:errors="*{gender}"></span>
+                </p>
+                <p class="form-field">
+                    <label for="filter-nationality">Национальность:</label>
+                    <input type="text" id="filter-nationality" th:field="*{nationality}"
+                           th:attr="aria-invalid=${#fields.hasErrors('nationality')},aria-describedby=${#fields.hasErrors('nationality')} ? 'filter-nationality-error' : null" maxlength="255">
+                    <span id="filter-nationality-error" class="field-error" th:if="${#fields.hasErrors('nationality')}"
+                          th:errors="*{nationality}"></span>
+                </p>
+                <p class="form-field">
+                    <label for="filter-city">Город:</label>
+                    <input type="text" id="filter-city" th:field="*{city}"
+                           th:attr="aria-invalid=${#fields.hasErrors('city')},aria-describedby=${#fields.hasErrors('city')} ? 'filter-city-error' : null" maxlength="255">
+                    <span id="filter-city-error" class="field-error" th:if="${#fields.hasErrors('city')}"
+                          th:errors="*{city}"></span>
+                </p>
+                <p class="form-field">
+                    <label for="filter-street">Улица:</label>
+                    <input type="text" id="filter-street" th:field="*{street}"
+                           th:attr="aria-invalid=${#fields.hasErrors('street')},aria-describedby=${#fields.hasErrors('street')} ? 'filter-street-error' : null" maxlength="255">
+                    <span id="filter-street-error" class="field-error" th:if="${#fields.hasErrors('street')}"
+                          th:errors="*{street}"></span>
+                </p>
+            </div>
+            <div class="form-actions">
+                <input type="submit" value="Найти">
+                <a class="btn btn-secondary" th:href="@{/customers}">Сбросить</a>
+            </div>
+        </form>
 
-    <span class="empty-state" th:if="${customers.size() == 0}">
-        Покупатели не найдены
-    </span>
+        <section class="results-panel" aria-labelledby="results-title">
+            <header class="results-heading">
+                <h2 id="results-title">Список покупателей</h2>
+                <span class="result-count" th:text="|Найдено: ${customers.size()}|"></span>
+            </header>
 
-    <div class="table-scroll" th:if="${customers.size() > 0}">
-    <table class="table table-hover">
-        <thead class="thead-dark">
-        <tr>
-            <td>Фамилия</td>
-            <td>Имя</td>
-            <td>Телефон</td>
-            <td></td>
-            <td></td>
-            <td></td>
-        </tr>
-        </thead>
+            <p class="empty-state" th:if="${customers.isEmpty()}">Покупатели не найдены</p>
 
-        <tbody>
-        <tr th:each="customer : ${customers}">
-            <td th:text="${customer.lastName}"></td>
-            <td th:text="${customer.name}"></td>
-            <td th:text="${customer.phoneNumber}"></td>
+            <div class="table-scroll" th:unless="${customers.isEmpty()}">
+                <table class="customer-table" role="table" aria-labelledby="results-title">
+                    <thead role="rowgroup">
+                    <tr role="row">
+                        <th scope="col" role="columnheader">Фамилия и имя</th>
+                        <th scope="col" role="columnheader">Телефон</th>
+                        <th scope="col" role="columnheader">Действия</th>
+                    </tr>
+                    </thead>
 
-            <td class="table-actions">
-                <a class="btn btn-secondary"
-                   th:href="@{'/customers/details/' + ${customer.id}}">
-                    Подробнее
-                </a>
-            </td>
-
-            <td class="table-actions">
-                <a class="btn btn-secondary"
-                   th:href="@{'/customers/update/' + ${customer.id}}">
-                    Редактировать
-                </a>
-            </td>
-
-            <td class="table-actions">
-                <a class="btn btn-danger"
-                   th:href="@{'/customers/delete/' + ${customer.id}}">
-                    Удалить
-                </a>
-            </td>
-        </tr>
-        </tbody>
-    </table>
+                    <tbody role="rowgroup">
+                    <tr role="row" th:each="customer : ${customers}">
+                        <td role="cell" class="customer-name" th:text="|${customer.lastName} ${customer.name}|"></td>
+                        <td role="cell" class="customer-phone" th:text="${customer.phoneNumber}"></td>
+                        <td role="cell">
+                            <div class="table-actions">
+                                <a class="btn btn-secondary btn-small"
+                                   th:href="@{/customers/details/{id}(id=${customer.id})}">Подробнее</a>
+                                <a class="btn btn-secondary btn-small" sec:authorize="hasRole('ADMIN')"
+                                   th:href="@{/customers/update/{id}(id=${customer.id})}">Редактировать</a>
+                                <form th:action="@{/customers/delete/{id}(id=${customer.id})}"
+                                      method="post" sec:authorize="hasRole('ADMIN')">
+                                    <button class="btn btn-danger btn-small" type="submit">Удалить</button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
     </div>
-</div>
+</main>
 </body>
 </html>

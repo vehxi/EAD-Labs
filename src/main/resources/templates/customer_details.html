@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<html lang="ru" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -8,93 +9,121 @@
 </head>
 
 <body>
-<div class="container" th:with="customer=${selectedCustomer}">
-    <h1>Информация о покупателе</h1>
+<header class="site-header">
+    <div class="site-header-inner">
+        <a class="brand" th:href="@{/customers}">
+            <span class="brand-mark" aria-hidden="true"></span>
+            Реестр покупателей
+        </a>
+    </div>
+</header>
 
-    <div class="customer-details">
-        <p>ID:
-            <strong th:text="${customer.id}"></strong>
-        </p>
-        <p>Фамилия:
-            <strong th:text="${customer.lastName}"></strong>
-        </p>
-        <p>Имя:
-            <strong th:text="${customer.name}"></strong>
-        </p>
-        <p>Отчество:
-            <strong th:text="${customer.patronymic}"></strong>
-        </p>
-        <p>Пол:
-            <strong th:text="${customer.gender}"></strong>
-        </p>
-        <p>Национальность:
-            <strong th:text="${customer.nationality}"></strong>
-        </p>
-        <p>Рост, см:
-            <strong th:text="${customer.height}"></strong>
-        </p>
-        <p>Вес, кг:
-            <strong th:text="${customer.weight}"></strong>
-        </p>
-        <p>Дата рождения:
-            <strong th:text="${customer.birthDate}"></strong>
-        </p>
-        <p>Телефон:
-            <strong th:text="${customer.phoneNumber}"></strong>
-        </p>
-        <p>Номер кредитной карты:
-            <strong th:text="${customer.creditCardNumber}"></strong>
-        </p>
-        <p>Номер банковского счёта:
-            <strong th:text="${customer.bankAccountNumber}"></strong>
-        </p>
+<main class="container container-details" th:with="customer=${selectedCustomer}">
+    <header class="page-heading">
+        <a class="back-link" th:href="@{/customers}"><span aria-hidden="true">←</span> К списку покупателей</a>
+        <h1 th:text="|${customer.lastName} ${customer.name}|">Карточка покупателя</h1>
+    </header>
+
+    <div class="details-grid">
+        <section class="detail-panel" aria-labelledby="personal-title">
+            <h2 id="personal-title">Данные покупателя</h2>
+            <dl class="customer-details">
+                <div>
+                    <dt>ID</dt>
+                    <dd th:text="${customer.id}"></dd>
+                </div>
+                <div>
+                    <dt>Фамилия</dt>
+                    <dd th:text="${customer.lastName}"></dd>
+                </div>
+                <div>
+                    <dt>Имя</dt>
+                    <dd th:text="${customer.name}"></dd>
+                </div>
+                <div>
+                    <dt>Отчество</dt>
+                    <dd th:text="${customer.patronymic}"></dd>
+                </div>
+                <div>
+                    <dt>Пол</dt>
+                    <dd th:text="${customer.gender}"></dd>
+                </div>
+                <div>
+                    <dt>Национальность</dt>
+                    <dd th:text="${customer.nationality}"></dd>
+                </div>
+                <div>
+                    <dt>Рост, см</dt>
+                    <dd th:text="${customer.height}"></dd>
+                </div>
+                <div>
+                    <dt>Вес, кг</dt>
+                    <dd th:text="${customer.weight}"></dd>
+                </div>
+                <div>
+                    <dt>Дата рождения</dt>
+                    <dd th:text="${customer.birthDate}"></dd>
+                </div>
+                <div>
+                    <dt>Телефон</dt>
+                    <dd th:text="${customer.phoneNumber}"></dd>
+                </div>
+                <div>
+                    <dt>Номер кредитной карты</dt>
+                    <dd th:text="${customer.creditCardNumber}"></dd>
+                </div>
+                <div>
+                    <dt>Номер банковского счёта</dt>
+                    <dd th:text="${customer.bankAccountNumber}"></dd>
+                </div>
+            </dl>
+        </section>
+        <section class="detail-panel" aria-labelledby="address-title">
+            <h2 id="address-title">Домашний адрес</h2>
+            <dl class="customer-details" th:if="${customer.address != null}" th:with="address=${customer.address}">
+                <div>
+                    <dt>Почтовый индекс</dt>
+                    <dd th:text="${address.postalCode}"></dd>
+                </div>
+                <div>
+                    <dt>Страна</dt>
+                    <dd th:text="${address.country}"></dd>
+                </div>
+                <div>
+                    <dt>Область</dt>
+                    <dd th:text="${address.region}"></dd>
+                </div>
+                <div>
+                    <dt>Район</dt>
+                    <dd th:text="${address.district}"></dd>
+                </div>
+                <div>
+                    <dt>Город</dt>
+                    <dd th:text="${address.city.name}"></dd>
+                </div>
+                <div>
+                    <dt>Улица</dt>
+                    <dd th:text="${address.street}"></dd>
+                </div>
+                <div>
+                    <dt>Дом</dt>
+                    <dd th:text="${address.house}"></dd>
+                </div>
+                <div>
+                    <dt>Квартира</dt>
+                    <dd th:text="${address.apartment}"></dd>
+                </div>
+            </dl>
+            <p class="empty-state" th:if="${customer.address == null}">Домашний адрес пока не указан.</p>
+        </section>
     </div>
 
-    <h2 class="details-title">Домашний адрес</h2>
-
-    <div class="customer-details"
-         th:if="${customer.address != null}"
-         th:with="address=${customer.address}">
-        <p>Почтовый индекс:
-            <strong th:text="${address.postalCode}"></strong>
-        </p>
-        <p>Страна:
-            <strong th:text="${address.country}"></strong>
-        </p>
-        <p>Область:
-            <strong th:text="${address.region}"></strong>
-        </p>
-        <p>Район:
-            <strong th:text="${address.district}"></strong>
-        </p>
-        <p>Город:
-            <strong th:text="${address.city.name}"></strong>
-        </p>
-        <p>Улица:
-            <strong th:text="${address.street}"></strong>
-        </p>
-        <p>Дом:
-            <strong th:text="${address.house}"></strong>
-        </p>
-        <p>Квартира:
-            <strong th:text="${address.apartment}"></strong>
-        </p>
-    </div>
-
-    <div class="empty-state" th:if="${customer.address == null}">
-        Домашний адрес пока не указан.
-    </div>
-
-    <div class="details-actions">
+    <div class="details-actions" sec:authorize="hasRole('ADMIN')">
         <a class="btn"
            th:href="@{/customers/update/{id}(id=${customer.id})}">
             Редактировать
         </a>
-
-        <a class="btn btn-secondary" th:href="@{/customers}">
-            Вернуться к списку
-        </a>
     </div>
-</div>
+</main>
 </body>
 </html>

@@ -52,3 +52,8 @@ INSERT INTO customers (
                    AND apartment = '8'
              )
          );
+
+INSERT INTO users (username, password, role)
+VALUES
+    ('user', '$2a$10$Cylt2rTezofFrLX8dV2rru0.k7Zu2uVHMFggLGxZPf/Kl/crTXUHS', 'ROLE_USER'),
+    ('admin', '$2a$10$qIFZFuNQ..UJrLUmTj8yCuG0hcvmh1tuhmzfxZi7PQVyRvcP2JMw2', 'ROLE_ADMIN');

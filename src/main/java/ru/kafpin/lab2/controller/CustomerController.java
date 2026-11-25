@@ -90,7 +90,7 @@ public class CustomerController {
         return "customer_details";
     }
 
-    @GetMapping("/customers/delete/{id}")
+    @PostMapping("/customers/delete/{id}")
     public String deleteCustomerById(
             @PathVariable("id") Long id
     ) {
